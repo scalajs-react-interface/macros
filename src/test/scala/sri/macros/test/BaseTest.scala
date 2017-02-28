@@ -11,7 +11,7 @@ class BaseTest extends FunSuite with BeforeAndAfter with BeforeAndAfterAll {
   var domRegister: js.Function0[_] = null
 
   override protected def beforeAll(): Unit = {
-    domRegister = JSDOMGlobal()
+    domRegister = JSDOMGlobal() //register dom
   }
 
   override protected def afterAll(): Unit = {
