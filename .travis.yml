@@ -22,7 +22,6 @@ script:
 deploy:
   provider: script
   script:
-  - /bin/bash "$TRAVIS_BUILD_DIR/.travis.credentials.sh" && sbt +publish
+  - /bin/bash "$TRAVIS_BUILD_DIR/.travis.credentials.sh" && sbt publish
   on:
     tags: true
-    all_branches: true
