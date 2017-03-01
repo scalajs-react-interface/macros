@@ -5,6 +5,10 @@ import scala.scalajs.js
 import scala.scalajs.js.{Any, UndefOr, UndefOrOps, |}
 import scala.scalajs.js.|.Evidence
 
+/**
+  * https://github.com/scala-js/scala-js/issues/2714
+  * @tparam A
+  */
 abstract sealed class OptionalParam[+A] {
   def foreach[U](f: A => U): Unit
 }

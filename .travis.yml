@@ -30,6 +30,7 @@ deploy:
   - /bin/bash "$TRAVIS_BUILD_DIR/.travis.credentials.sh" && sbt +publish
   on:
     tags: true
+    all_branches:true
 
 env:
   global:
