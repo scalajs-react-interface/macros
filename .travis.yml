@@ -1,29 +1,24 @@
 language: scala
-
 scala:
 - 2.12.1
 - 2.11.8
-
 jdk:
 - oraclejdk8
-
 install:
-  - . $HOME/.nvm/nvm.sh
-  - nvm install stable
-  - nvm use stable
-  - npm install
-  - npm install jsdom source-map-support jsdom-global
-
+- ". $HOME/.nvm/nvm.sh"
+- nvm install stable
+- nvm use stable
+- npm install
+- npm install jsdom source-map-support jsdom-global
 env:
   global:
-    JSENV=node
-
+  - secure: QtjGA1az13DSVNzOiQOGpJgaJuF5HM1SXMZZYQv3FfNSL5Ek2pvaT66cFXo2DQucmL6K8yUTOugPMP/d1UJBp/guhmzr8be9XfMRClDNz8ESpWs9gXRrq7BGReIRCnBvfoZOWNTOZhYsgr/6U2srr+2T/Cn6vfsbCRQaeEeEYkg1dzcuSS7jvbYO90WAAAVaXPw3oZ5ypxa7LORla2xJoxQdUQIh1PlWhEARRZ+BXywmcf89pnqGR2ml4wVUlZ91bfpzB9AHntShqod3a4B338qvnwgMW0OWj7oShZq9RCsnrHvmLRkLZ0pqyw8mGzowwUHbrb/qnqAengvCMd2McEOTfab8hT639yPz48z/mZ8CFSf+Vx43G+eLT1l8zlWZY/entV03DB1vkRsV5TPt1Lt5/f+o10muIm1bux8oIRZu49Nl7xpaAJ0UK61A+YWWxTXqn8/67tF+fb2ERVlJlRHNjR3lFmUFVAK7FREq1GjYSsGeKC/LU3JUBmSPmQZLCvvoaK5LZTyjHgGTYy071GXGSX5yTFEhpOXkTMwv8uRkw7bjC7samfAQs8Y4si4lHSlwv+khCdgMMGDxhuFPA0xoDw6NgZuKQR50IPtQgnrd5xc1Cggz/IC3+6BS6zSqXqR/Gi+HBbAbjR/VxAkqSD4IwMNQpYQ0ZiLNV7WxZUA=
+  - secure: u3RIqFIk+AvD5z/1yIW3C+pCXZpyu2vxM7T/BSrRNZ62w0vdaDaoSggdDS+68uZh79w1EfyUK3yF+086KMM4IvHFH62d8HP/unBTByiOwOVe8QK/ZDSXo0bsd4zriev2ee+8fX2lxD5MH7kqsuiptfvgAwkWpKAXuJDIcPyvZs96aseEpd7ePKwxV8XQkM6BhSzAuKCbG4xNBNCRnJtSV2+iJ+TNCudcT8HcxP4045BdNwrMlGjBkA9SQ289sNXm3fHOHApwuVo+bMPFfYV5GYcsdjMd4jC1jO0rWHcWmEiMiExB7saGV8t4xyTD9TQeV6kht1Csycfew58hHIInF7Pwbnx2We9D8hSXfyk0ZFdc1MYyNTudJyWoUmNbGZQnGlJMIBb4xVp+0KpiCnb6KD0MGj/8fW+JUTo6RCs0JfsuHYKJekzwn5ZbTBQoguIItgjZmoiohPdp/Q3ciERb7ZoKaNdmHz+raT/clEKwrXXxDQPSex99cg2wuUgEBv5xWWlqBS/ePm11gGtTHx2FG5KUvXBs7toKXNt0TBHubhRI2oa34bzvUSHl8tVGiNWRwX6uUIdSaj35tLGpsmTCmy+mvi3r2AfjygXmq8zEtv0k9IBTtWqUSHaofIrV1lthPsLr5tEx7ywLDPdISnDRzuNlt12LiCf0SPqjLPaZo30=
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION test:fastOptJS test:fullOptJS
-  - sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' test
-  - sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' 'set scalaJSStage in ThisBuild := FullOptStage' test
-
-
+- sbt ++$TRAVIS_SCALA_VERSION test:fastOptJS test:fullOptJS
+- sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' test
+- sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' 'set scalaJSStage
+  in ThisBuild := FullOptStage' test
 deploy:
   provider: script
   script:
@@ -31,11 +26,3 @@ deploy:
   on:
     tags: true
     all_branches: true
-
-env:
-  global:
-  # travis encrypt BINTRAY_USER=xxx
-  - secure: "SaFeMNRhdV2zO4SJ0NfqHENiEpsljam47OV0EuS2Rp/kCFBaAkTY23boExe9ZDBFomwLTAnHGukPDFqlRWpn8XSPVsMfe9RSz3L043OG7rzGcx2KLi44J9meTLXklQF4XRDQMV8NGzvl/djlC1WlUJcwtPcRtmlUE8V2mTsr+ymYAglQBdiWuOCLRe3O7tX/y5vaqMNfQ9YPm+C7/ruWnjHZUxacfoj5DMZ+HvpFfcY4/W3X5EEUtJxOj1S0Kb1BZye7oK0GmnAOKK0bdpcyL7l4UQL+D5o2hQVSxF/rJ4whz7aJmztD8q7mI/B8/jUupUcVIPvQ6Y8BBDILLY8GRMnlTdHsP3PklExXm2+sq0l2m5Erch77A40zD7FHGj6pB5u2SQ5pIdadEcNZguJj4tk8QK/d1e8hJo/E8aZtxeZuwVLLl9sGbn8d2oM7ADq3f41RJYnVhJHR8+XE/tp2uvXJwL0yzdUrReGg2qs4LRFvcwddnD/aLQumpcmPYcYPM9gAwmgsW+fur4+gnRFCI7gBzWL5Cbfu0vsIg4bQr/Oeap7XcCm8mNSCje9olqr/a2ir1HsMYlOq7o3qW875tG5KnyhwqZo2xK4Zt8PpMIdQ/ie4lIeQ1kAS2J2+VByrGl1KoBamV2wSGMsSzWSOGptk+SVtqJe6eG6BZKRYDnI="
-  # travis encrypt BINTRAY_PASSWORD=xxx
-  - secure: "mpGMrv9A65tly/2IFUg+ZnJ80VV7xVV7QOPvwrNSGGqtm3N/YjRZr5t84Kwp2FZJn2WKTipa6ywV2hvYQt7QjfA+Nga5w4Zx+mC+/ZtUZk/rTi7tO97cgFgksIt+f+VFS28jjQUdl9TymPUGoN0voCtDoaoZ8yk9gDo+AC0GYsgI1hHTzHGTOrzZu/zEhFuhhjrO/24xQImLyhTeYNJLH771Y4gaZU/SnR8l3/hpDDOp9VOnXKQ5srlKa6YMMjRrPUWtFXromLrH3NTO8QYsTm+kQPo4yck7BHu2eT4yUYYqjyfiVSFtNRDccofdTnrNxyOM4B3Pw49ZhlbxlcbZTSUa6HVz63eW4Rbr8Fm3G2NMGlPtnhQf/W1LvB6STDD7qeO0mjvW0C1cHydkklsyfq/Oko9vLO5GemdYPHZ/YdhaWZ5YATV9zl2mHhLkGPu0eZN3rK+i9FF5sZLqBzT0cHc4M0kV04V1DQcTndh7/S9wGluJj62Myz2rj0JKh9KSHCrreWQUazNKynxHAnSseHRXU7KSbTCOs7ZGNIsvchLr5RP4OPuXjIuUndDGA97BnsYtIR0IZ0wzamps84OD+X6jW0GWDeh2dRptrwXa3js/vR2eT9anACShhotdfi2GoAO9pKmC8lWgKPaINNhZdBryl+oed9NS+Ra3EHEH668="
-
