@@ -9,7 +9,7 @@ install:
 - nvm install stable
 - nvm use stable
 - npm install
-- npm install jsdom source-map-support jsdom-global
+#- npm install jsdom source-map-support jsdom-global
 env:
   global:
   - secure: QtjGA1az13DSVNzOiQOGpJgaJuF5HM1SXMZZYQv3FfNSL5Ek2pvaT66cFXo2DQucmL6K8yUTOugPMP/d1UJBp/guhmzr8be9XfMRClDNz8ESpWs9gXRrq7BGReIRCnBvfoZOWNTOZhYsgr/6U2srr+2T/Cn6vfsbCRQaeEeEYkg1dzcuSS7jvbYO90WAAAVaXPw3oZ5ypxa7LORla2xJoxQdUQIh1PlWhEARRZ+BXywmcf89pnqGR2ml4wVUlZ91bfpzB9AHntShqod3a4B338qvnwgMW0OWj7oShZq9RCsnrHvmLRkLZ0pqyw8mGzowwUHbrb/qnqAengvCMd2McEOTfab8hT639yPz48z/mZ8CFSf+Vx43G+eLT1l8zlWZY/entV03DB1vkRsV5TPt1Lt5/f+o10muIm1bux8oIRZu49Nl7xpaAJ0UK61A+YWWxTXqn8/67tF+fb2ERVlJlRHNjR3lFmUFVAK7FREq1GjYSsGeKC/LU3JUBmSPmQZLCvvoaK5LZTyjHgGTYy071GXGSX5yTFEhpOXkTMwv8uRkw7bjC7samfAQs8Y4si4lHSlwv+khCdgMMGDxhuFPA0xoDw6NgZuKQR50IPtQgnrd5xc1Cggz/IC3+6BS6zSqXqR/Gi+HBbAbjR/VxAkqSD4IwMNQpYQ0ZiLNV7WxZUA=
