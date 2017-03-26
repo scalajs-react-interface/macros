@@ -1,0 +1,29 @@
+language: scala
+scala:
+- 2.12.1
+- 2.11.8
+jdk:
+- oraclejdk8
+install:
+- ". $HOME/.nvm/nvm.sh"
+- nvm install stable
+- nvm use stable
+- npm install
+#- npm install jsdom source-map-support jsdom-global
+env:
+  global:
+ # travis encrypt BINTRAY_USER=xxx
+   - secure: "JkM03W4e4BaVkL5my03AeursYwBl5ZsjZEVfn9SXbtnYYuB65TNAmcLJpPx9+u7OvUIvwuGLZ4xPIOEbUD2XmzIo0bjJsbfqngZO7cZ13DQbpoZYL0EMY0t0g6lPdg79nponX5XiktiFkv4K7ya9qGYI2dJec3OwpSEe2zinh9HzmaDKGmO7yjdYlE2QqSsyN19O4T0qMhy6VO4RdAlT7X8lcm1YeNCEU+YzVB5YGVz27ZR6vjInDIrgjWK61wvXYdcIh83t4LxE9Ak4s6z3iYHQ6m5iJbgYthjcDAwIrxGfDfIGRXwAm+6p1rTw6/TVHMEmTlHrMC58sQsCqsO6bVuNpe7TKeWOPl1TVZO4KXChqm7UJK/c7ICJzu9QZGmO4Cb+D6wHxh5e6sUQMOKoQPldE28y4/LrWp5xxam36Bb5ixP3bv98IC6mIhgW0qGoVr37MpEDXBGMF+aiHghJECg6ueYiKtcKPq97dc9gGF4Ck7OJ0E3lE5opIRFb9rdylEXk8qwD2rX88DML162CIQfHTSbcBtQkdKBL+LAN6E2reGR4RbqU1oU4RWFCPF7gb2ziyBFB8VH53f92E5oWCxOdoFqd3BIKcy+xaiBlxUXA263gn1VGJt46TwYDsjTpvYLKfH6rOlKWG/o1jHpoTqq4l3bDQlYTdRwvSbUyTOc="
+   # travis encrypt BINTRAY_PASSWORD=xxx
+   - secure: "N5ri26QV5z5je6NY9edHsuoMnVeM9EXcZmYmJ//K1xXxSzTA/clBx1lZtPpeT7u20s9AIH30aL6yhs51SpPbEi6T69b5HDEeeJbH56NeEI851oZVDniFe4KfM9k4tZ8w8Vj8oMf+SqafdDh6RhOyoN+0uqbOeze3ia7rco0YVSPdh2P2E0+8eb3bpfTAGQAdzQFLsQCw6VMQdVsyDbgOgS40QYCpbq2kJEs6IfUnU7MgXAsdu5gzgP0wIdTFv1L4xb5yk35RbYIqnqJKgSkvzV8gSX8qwSI2zWcHyg4hN7H1tRQwq4mxkaQNK9N44Az+Fjt3hCY1s/y+BjlFsDgPFLwCWaBa0auVaB8jVMNsIN1u086Ks3cBfdlvqbSXG5NFqulLTvlD8C7Tt/ByxJxQtRCEFDYqQxmlGKVXK4vK6ZBGkLGPPdD4rvKdM90eBkVzME9ctFjADu/71KcPJmS7lv7hM0ePGlcDYPb715i+d8acuhWIPolADX8bVll/DQv2g+cLzPugtuSl01ljJkPXUMu7g92Zi4iOmQEjgt44ldvgGS3I0N5Omtcw4x0qFtb6qXRN+Yhp1Ikenmf92gxEIEB87J17n4CZqDjCY4YdIF4l/08hTbraALOqq7LM43IrvsELuhmELPptDlupirT63Dwk8TCb84TFC5rZa4prb7s="
+script:
+- sbt ++$TRAVIS_SCALA_VERSION test:fastOptJS test:fullOptJS
+- sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' test
+- sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' 'set scalaJSStage
+  in ThisBuild := FullOptStage' test
+deploy:
+  provider: script
+  script:
+  - /bin/bash "$TRAVIS_BUILD_DIR/.travis.credentials.sh" && sbt ++$TRAVIS_SCALA_VERSION publish
+  on:
+    tags: true
