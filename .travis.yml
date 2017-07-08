@@ -17,10 +17,8 @@ env:
    # travis encrypt BINTRAY_PASSWORD=xxx
    - secure: "N5ri26QV5z5je6NY9edHsuoMnVeM9EXcZmYmJ//K1xXxSzTA/clBx1lZtPpeT7u20s9AIH30aL6yhs51SpPbEi6T69b5HDEeeJbH56NeEI851oZVDniFe4KfM9k4tZ8w8Vj8oMf+SqafdDh6RhOyoN+0uqbOeze3ia7rco0YVSPdh2P2E0+8eb3bpfTAGQAdzQFLsQCw6VMQdVsyDbgOgS40QYCpbq2kJEs6IfUnU7MgXAsdu5gzgP0wIdTFv1L4xb5yk35RbYIqnqJKgSkvzV8gSX8qwSI2zWcHyg4hN7H1tRQwq4mxkaQNK9N44Az+Fjt3hCY1s/y+BjlFsDgPFLwCWaBa0auVaB8jVMNsIN1u086Ks3cBfdlvqbSXG5NFqulLTvlD8C7Tt/ByxJxQtRCEFDYqQxmlGKVXK4vK6ZBGkLGPPdD4rvKdM90eBkVzME9ctFjADu/71KcPJmS7lv7hM0ePGlcDYPb715i+d8acuhWIPolADX8bVll/DQv2g+cLzPugtuSl01ljJkPXUMu7g92Zi4iOmQEjgt44ldvgGS3I0N5Omtcw4x0qFtb6qXRN+Yhp1Ikenmf92gxEIEB87J17n4CZqDjCY4YdIF4l/08hTbraALOqq7LM43IrvsELuhmELPptDlupirT63Dwk8TCb84TFC5rZa4prb7s="
 script:
-- sbt ++$TRAVIS_SCALA_VERSION test:fastOptJS test:fullOptJS
-- sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' test
-- sbt ++$TRAVIS_SCALA_VERSION 'set parallelExecution in ThisBuild := false' 'set scalaJSStage
-  in ThisBuild := FullOptStage' test
+  - sbt ++$TRAVIS_SCALA_VERSION testDev testProd
+
 deploy:
   provider: script
   script:

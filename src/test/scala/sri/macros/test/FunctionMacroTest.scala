@@ -1,18 +1,9 @@
 package sri.macros.test
 
-import org.scalatest.FunSuite
-import sri.macros.{
-  OptionalParam,
-  OptDefault,
-  FunctionObjectMacro,
-  rename,
-  exclude
-}
+import sri.macros._
 
-import scala.reflect.ClassTag
 import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSImport, ScalaJSDefined}
-import scala.scalajs.js.{JSON, |}
+import scala.scalajs.js.JSON
 
 class FunctionMacroTest extends BaseTest {
 
@@ -20,7 +11,6 @@ class FunctionMacroTest extends BaseTest {
 //      ab: A | B)(implicit eva: A => js.Any, evb: B => js.Any): js.Any =
 //    ab.asInstanceOf[js.Any]
 
-  @ScalaJSDefined
   trait Address extends js.Object {
     var country: js.UndefOr[String] = js.undefined
   }
@@ -29,7 +19,6 @@ class FunctionMacroTest extends BaseTest {
     def apply(country1: String) = new Address { country = country1 }
   }
 
-  @ScalaJSDefined
   trait TestObj extends js.Object
 
   def Plain(name: String,
@@ -106,90 +95,120 @@ class FunctionMacroTest extends BaseTest {
     println(s"Result is : ${JSON.stringify(result)}")
   }
 
-  test("simple fields test") {
-    val global = js.Dynamic.global
-    println(global.document.body)
-    val plain = (Plain("bpt", "rice")).asInstanceOf[js.Dynamic]
-    assert(plain.name.toString == "bpt")
-    assert(plain.category.toString == "rice")
-    assert(!plain.asInstanceOf[js.Object].hasOwnProperty("peracre"))
-  }
+  test(
+    "simple fields test",
+    () => {
+      println(js.Dynamic.global.document.body)
+      val plain = (Plain("bpt", "rice")).asInstanceOf[js.Dynamic]
+      expect(plain.name.toString).toBe("bpt")
+      expect(plain.category.toString).toBe("rice")
+      expect(plain.asInstanceOf[js.Object].hasOwnProperty("peracre"))
+        .toBeFalsy()
+    }
+  )
 
-  test("simple fields test with custom field names") {
-    val plain = PlainKeys("bpt", "rice").asInstanceOf[js.Dynamic]
-    assert(plain.custom_name.toString == "bpt")
-    assert(plain.category.toString == "rice")
-    assert(!plain.asInstanceOf[js.Object].hasOwnProperty("peracre"))
-  }
+  test(
+    "simple fields test with custom field names",
+    () => {
+      val plain = PlainKeys("bpt", "rice").asInstanceOf[js.Dynamic]
+      expect(plain.custom_name.toString).toBe("bpt")
+      expect(plain.category.toString).toBe("rice")
+      expect(plain.asInstanceOf[js.Object].hasOwnProperty("peracre"))
+        .toBeFalsy()
+    }
+  )
 
-  test("should handle seq") {
-    val result = SeqTest().asInstanceOf[js.Dynamic]
-    assert(result.s.asInstanceOf[js.Array[String]].head == "dude")
-    assert(
-      result.as
-        .asInstanceOf[js.Array[js.Dictionary[String]]]
-        .head("country") == "India")
+  test(
+    "should handle seq",
+    () => {
+      val result = SeqTest().asInstanceOf[js.Dynamic]
+      expect(result.s.asInstanceOf[js.Array[String]].head).toBe("dude")
+      expect(
+        result.as
+          .asInstanceOf[js.Array[js.Dictionary[String]]]
+          .head("country")).toBe("India")
 
-    val result2 = SeqUndefTest().asInstanceOf[js.Dynamic]
-    assert(result2.s.asInstanceOf[js.Array[String]].head == "dude")
-    assert(
-      result2.as
-        .asInstanceOf[js.Array[js.Dictionary[String]]]
-        .head("country") == "India")
-  }
-  test("should handle sets") {
-    val result = SetTest().asInstanceOf[js.Dynamic]
-    assert(result.s.asInstanceOf[js.Array[String]].head == "dude")
-    assert(
-      result.as
-        .asInstanceOf[js.Array[js.Dictionary[String]]]
-        .head("country") == "India")
-  }
+      val result2 = SeqUndefTest().asInstanceOf[js.Dynamic]
+      expect(result2.s.asInstanceOf[js.Array[String]].head).toBe("dude")
+      expect(
+        result2.as
+          .asInstanceOf[js.Array[js.Dictionary[String]]]
+          .head("country")).toBe("India")
+    }
+  )
+  test(
+    "should handle sets",
+    () => {
+      val result = SetTest().asInstanceOf[js.Dynamic]
+      expect(result.s.asInstanceOf[js.Array[String]].head).toBe("dude")
+      expect(
+        result.as
+          .asInstanceOf[js.Array[js.Dictionary[String]]]
+          .head("country")).toBe("India")
+    }
+  )
 
-  test("should handle arrays") {
-    val result = ArrayTest().asInstanceOf[js.Dynamic]
-    assert(result.s.asInstanceOf[js.Array[String]].head == "dude")
-    assert(
-      result.as
-        .asInstanceOf[js.Array[js.Dictionary[String]]]
-        .head("country") == "India")
-  }
+  test(
+    "should handle arrays",
+    () => {
+      val result = ArrayTest().asInstanceOf[js.Dynamic]
+      expect(result.s.asInstanceOf[js.Array[String]].head).toBe("dude")
+      expect(
+        result.as
+          .asInstanceOf[js.Array[js.Dictionary[String]]]
+          .head("country")).toBe("India")
+    }
+  )
 
-  test("should handle maps") {
-    val result = MapTest().asInstanceOf[js.Dynamic]
-    assert(result.m.asInstanceOf[js.Dictionary[String]].get("key").get == "0")
-    assert(
-      result.ma
-        .asInstanceOf[js.Dictionary[js.Dynamic]]
-        .get("address")
-        .get
-        .country
-        .toString == "India")
-  }
+  test(
+    "should handle maps",
+    () => {
+      val result = MapTest().asInstanceOf[js.Dynamic]
+      expect(result.m.asInstanceOf[js.Dictionary[String]].get("key").get)
+        .toBe("0")
+      expect(
+        result.ma
+          .asInstanceOf[js.Dictionary[js.Dynamic]]
+          .get("address")
+          .get
+          .country
+          .toString).toBe("India")
+    }
+  )
 
-  test("should handle js.Dictionary") {
-    val result = JSDictTest().asInstanceOf[js.Dynamic]
-    assert(result.m.asInstanceOf[js.Dictionary[String]].get("key").get == "0")
-    assert(
-      result.ma
-        .asInstanceOf[js.Dictionary[js.Dynamic]]
-        .get("address")
-        .get
-        .country
-        .toString == "India")
-  }
+  test(
+    "should handle js.Dictionary",
+    () => {
+      val result = JSDictTest().asInstanceOf[js.Dynamic]
+      expect(result.m.asInstanceOf[js.Dictionary[String]].get("key").get)
+        .toBe("0")
+      expect(
+        result.ma
+          .asInstanceOf[js.Dictionary[js.Dynamic]]
+          .get("address")
+          .get
+          .country
+          .toString).toBe("India")
+    }
+  )
 
-  test("should handle functions") {
-    val result = FunctionTest().asInstanceOf[js.Dynamic]
-    assert(result.fn0.asInstanceOf[js.Function0[Int]]() == 5)
-    assert(
-      result.fn1.asInstanceOf[js.Function1[Double, String]](1.2) == "1.2 x")
-  }
+  test(
+    "should handle functions",
+    () => {
+      val result = FunctionTest().asInstanceOf[js.Dynamic]
+      expect(result.fn0.asInstanceOf[js.Function0[Int]]()).toBe(5)
+      expect(result.fn1.asInstanceOf[js.Function1[Double, String]](1.2))
+        .toBe("1.2 x")
+    }
+  )
 
-  test("should not include excluded fields") {
-    val result = ExcludeTest().asInstanceOf[js.Dynamic]
-    assert(result.name.toString == "Hello")
-    assert(js.isUndefined(result.age))
-  }
+  test(
+    "should not include excluded fields",
+    () => {
+      val result = ExcludeTest().asInstanceOf[js.Dynamic]
+      expect(result.name.toString).toBe("Hello")
+      expect(js.isUndefined(result.age)).toBeTruthy()
+    }
+  )
 
 }

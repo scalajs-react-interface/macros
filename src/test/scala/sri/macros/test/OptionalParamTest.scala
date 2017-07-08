@@ -1,47 +1,59 @@
 package sri.macros.test
 
-import org.scalatest.FunSuite
 import sri.macros.{OptDefault, OptSpecified, OptionalParam}
 
 import scala.scalajs.js
 import scala.scalajs.js.{UndefOr, |}
 
-class OptionalParamTest extends FunSuite {
-  test("should plain values") {
-    def fun(value: OptionalParam[Int] = OptDefault) = value
+class OptionalParamTest extends BaseTest {
+  test(
+    "should plain values",
+    () => {
+      def fun(value: OptionalParam[Int] = OptDefault) = value
 
-    assert(fun(2) === OptSpecified(2))
-    assert(fun() === OptDefault)
-  }
+      expect(fun(2)).toEqual(OptSpecified(2).asInstanceOf[js.Any])
+      expect(fun()).toBe(OptDefault)
+    }
+  )
 
-  test("should handle Unions") {
-    def fun(value: OptionalParam[Int | String] = OptDefault) = value
+  test(
+    "should handle Unions",
+    () => {
+      def fun(value: OptionalParam[Int | String] = OptDefault) = value
 
-    assert(fun(2) === OptSpecified(2))
-    assert(fun() === OptDefault)
-  }
+      expect(fun(2)).toEqual(OptSpecified(2).asInstanceOf[js.Any])
+      expect(fun()).toBe(OptDefault)
+    }
+  )
 
-  test("should handle UndefOr conversions") {
-    def fun(value: OptionalParam[Int] = OptDefault) = value
+  test(
+    "should handle UndefOr conversions",
+    () => {
+      def fun(value: OptionalParam[Int] = OptDefault) = value
 
-    assert(fun(js.undefined) === OptDefault)
-    assert(fun(2) === OptSpecified(2))
-  }
+      expect(fun(2)).toEqual(OptSpecified(2).asInstanceOf[js.Any])
+      expect(fun(js.undefined)).toBe(OptDefault)
+    }
+  )
 
-  test("should handle UndefOr Union conversions") {
-    trait AA
-    case class A(v1: String) extends AA
-    case object B
-    def fun(value: OptionalParam[AA | B.type] = OptDefault) = value
+  test(
+    "should handle UndefOr Union conversions",
+    () => {
+      trait AA
+      case class A(v1: String) extends AA
+      case object B
+      def fun(value: OptionalParam[AA | B.type] = OptDefault) = value
 
-    val definedA: UndefOr[A] = A("hello")
-    val definedB: UndefOr[A | B.type] = B
-    val undefinedB: UndefOr[A | B.type] = js.undefined
-    assert(fun(A("hello")) === OptionalParam.specified(A("hello")))
-    assert(fun(js.undefined) === OptDefault)
-    assert(fun(definedA) === OptSpecified(A("hello")))
-    assert(fun(definedB) === OptSpecified(B))
-    assert(fun(undefinedB) === OptDefault)
-    assertDoesNotCompile("fun(\"hello\")")
-  }
+      val definedA: UndefOr[A] = A("hello")
+      val definedB: UndefOr[A | B.type] = B
+      val undefinedB: UndefOr[A | B.type] = js.undefined
+      expect(fun(A("hello")))
+        .toEqual(OptionalParam.specified(A("hello")).asInstanceOf[js.Any])
+      expect(fun(js.undefined)).toBe(OptDefault)
+      expect(fun(definedA))
+        .toEqual(OptSpecified(A("hello")).asInstanceOf[js.Any])
+      expect(fun(definedB)).toEqual(OptSpecified(B).asInstanceOf[js.Any])
+      expect(fun(undefinedB)).toBe(OptDefault)
+    }
+  )
 }
